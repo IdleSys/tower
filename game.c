@@ -1,8 +1,12 @@
-
 #include "player.h"
 #include "raylib.h"
 #include "utils/enemies.h"
 #include "utils/movement.h"
+#include <locale.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/types.h>
 
 #define SPACE_BLACK CLITERAL(Color){14, 15, 20, 255}
 
@@ -14,7 +18,30 @@ PlayerState playerState = {
     .playerSpeed = 50.0f,
     .rotationSpeed = 100.0f};
 
-const int enemy_cooldown = 1000000; // SEC
+typedef struct EnemyNode {
+  struct EnemyNode *next;
+  Enemy *data;
+
+} EnemyNode;
+
+EnemyNode *enemyHead;
+EnemyNode *enemyTail;
+
+void addEnemyToStack(Enemy *enemy) {
+  EnemyNode *newNode = malloc(sizeof(EnemyNode));
+  newNode->data = enemy;
+  newNode->next = NULL;
+
+  if (enemyHead == NULL) {
+    enemyHead = newNode;
+    enemyTail = newNode;
+    return;
+  }
+
+  enemyTail->next = newNode;
+  enemyTail = newNode;
+}
+const int enemy_cooldown = 4; // SEC
 
 int main(void) {
   InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "game");
@@ -29,11 +56,16 @@ int main(void) {
     DrawCircleV(playerState.playerPos, 10, RAYWHITE);
 
     if (enemycooldowncounter <= 0) {
-      spawnEnemy();
+      Enemy *new_enemy = spawnEnemy();
+      addEnemyToStack(new_enemy);
       enemycooldowncounter = enemy_cooldown;
     }
-
-    enemycooldowncounter -= 1.0f / GetFPS();
+    EnemyNode *enemy = enemyHead;
+    while (enemy != NULL) {
+      moveEnemyTowardsPlayer(enemy->data, playerState.playerPos);
+      enemy = enemy->next;
+    }
+    enemycooldowncounter -= GetFrameTime();
 
     EndDrawing();
   }

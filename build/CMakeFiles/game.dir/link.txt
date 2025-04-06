@@ -1,1 +1,0 @@
-/usr/bin/cc -Wl,--dependency-file=CMakeFiles/game.dir/link.d CMakeFiles/game.dir/game.c.o CMakeFiles/game.dir/utils/movement.c.o CMakeFiles/game.dir/utils/enemies.c.o -o bin/game  raylib_build/raylib/libraylib.a -lm -lpthread /usr/lib/libOpenGL.so /usr/lib/libGLX.so /usr/lib/libGLU.so /usr/lib/librt.a -lm -ldl

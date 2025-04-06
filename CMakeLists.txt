@@ -3,10 +3,10 @@ cmake_minimum_required(VERSION 3.14)
 project(game C)
 set(CMAKE_C_STANDARD 99)
 
-# Manually specify Raylib path
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 set(RAYLIB_PATH "${CMAKE_SOURCE_DIR}/external/raylib")
 
-# Check if Raylib submodule exists and add it
 if(NOT EXISTS "${RAYLIB_PATH}/CMakeLists.txt")
   message(
     FATAL_ERROR "Raylib not found in ${RAYLIB_PATH}. Please clone it manually!")

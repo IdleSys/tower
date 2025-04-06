@@ -1,5 +1,9 @@
+#include "enemies.h"
 #include "../player.h"
 #include "raylib.h"
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 Vector2 getRandomEdgePosition() {
   Vector2 position = {0};
@@ -29,4 +33,32 @@ Vector2 getRandomEdgePosition() {
   return position;
 }
 
-void spawnEnemy() { DrawCircleV(getRandomEdgePosition(), 3, BLACK); }
+Enemy *spawnEnemy() {
+  Enemy *enemy = malloc(sizeof(Enemy));
+  if (!enemy) {
+    fprintf(stderr, "Failed to allocate memory for enemy\n");
+    return NULL;
+  }
+
+  enemy->position = getRandomEdgePosition();
+  enemy->speed = 10;
+  enemy->radius = 5;
+
+  return enemy;
+}
+
+void moveEnemyTowardsPlayer(Enemy *enemy, Vector2 playerPos) {
+  Vector2 direction = {playerPos.x - enemy->position.x,
+                       playerPos.y - enemy->position.y};
+  float distance = sqrtf(direction.x * direction.x + direction.y * direction.y);
+
+  if (distance != 0) {
+    direction.x /= distance;
+    direction.y /= distance;
+
+    enemy->position.x += direction.x * enemy->speed * GetFrameTime();
+    enemy->position.y += direction.y * enemy->speed * GetFrameTime();
+  }
+
+  DrawCircleV(enemy->position, 3, BLACK);
+}
