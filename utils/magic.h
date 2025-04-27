@@ -14,22 +14,28 @@ enum MagicState {
     HIT
 };
 
+typedef struct EnemyState {
+    Vector2 position;
+    Vector2 direction;
+
+} EnemyState;
+
 typedef struct {
     const char* title;
     const char* description;
     float speed;
     float cooldown;
+    int amount;
+    int amountCounter;
     float cooldownCounter;
-    Vector2 position;
     Texture shootTexture;
     Texture middleTexture;
     Texture hitTexture;
     const enum MagicType magicType;
 } Magic;
 
-Magic createMagic(char *title, char *description, enum MagicType magic_type,
-                  const char *hit_texture, const char *middle_texture,
-                  const char *shoot_texture, float speed, float cooldown);
+Magic *createMagic(char *title, char *description, float speed, float cooldown,
+                   float cooldownCounter);
 void destroyMagic(Magic magic);
 
 #endif
