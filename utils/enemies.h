@@ -18,4 +18,5 @@ typedef struct {
 
 Enemy *spawnEnemy();
 void moveEnemyTowardsPlayer(Enemy *enemy, Vector2 playerPos);
+float getDistanceWithPlayer(Vector2 enemyPos, Vector2 playerPos);
 #endif

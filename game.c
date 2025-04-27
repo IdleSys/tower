@@ -8,7 +8,7 @@
 #include <string.h>
 #include <sys/types.h>
 
-#define SPACE_BLACK CLITERAL(Color){14, 15, 20, 255}
+#define SPACE_BLACK CLITERAL(Color){98, 98, 98, 255}
 
 Vector2 CENTER = {SCREEN_WIDTH / 2.f, SCREEN_HEIGHT / 2.f};
 
@@ -16,7 +16,8 @@ PlayerState playerState = {
     .playerPos = {SCREEN_WIDTH / 2.0f, SCREEN_HEIGHT / 2.0f},
     .targetPos = {0, 0},
     .playerSpeed = 50.0f,
-    .rotationSpeed = 100.0f};
+    .rotationSpeed = 100.0f,
+    .shootRange = 10.0f};
 
 typedef struct EnemyNode {
   struct EnemyNode *next;
@@ -26,6 +27,8 @@ typedef struct EnemyNode {
 
 EnemyNode *enemyHead;
 EnemyNode *enemyTail;
+
+EnemyNode *nearbyEnemiesHead;
 
 void addEnemyToStack(Enemy *enemy) {
   EnemyNode *newNode = malloc(sizeof(EnemyNode));
@@ -41,7 +44,17 @@ void addEnemyToStack(Enemy *enemy) {
   enemyTail->next = newNode;
   enemyTail = newNode;
 }
-const int enemy_cooldown = 4; // SEC
+
+bool *isInRange(Enemy *enemy) {
+  float distance =
+      getDistanceWithPlayer(enemy->position, playerState.playerPos);
+  if (distance >= playerState.shootRange) {
+    return true;
+  }
+  return false;
+}
+
+const int enemy_cooldown = 1; // SEC
 
 int main(void) {
   InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "game");
@@ -63,6 +76,7 @@ int main(void) {
     EnemyNode *enemy = enemyHead;
     while (enemy != NULL) {
       moveEnemyTowardsPlayer(enemy->data, playerState.playerPos);
+
       enemy = enemy->next;
     }
     enemycooldowncounter -= GetFrameTime();

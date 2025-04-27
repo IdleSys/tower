@@ -62,3 +62,8 @@ void moveEnemyTowardsPlayer(Enemy *enemy, Vector2 playerPos) {
 
   DrawCircleV(enemy->position, 3, BLACK);
 }
+
+float getDistanceWithPlayer(Vector2 enemyPos, Vector2 playerPos) {
+  return fabs(sqrtf(pow(enemyPos.x - playerPos.x, 2) +
+                    pow(enemyPos.y - playerPos.y, 2)));
+}

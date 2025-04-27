@@ -14,6 +14,7 @@ typedef struct {
     float playerSpeed;
     float playerAngle;
     float rotationSpeed;
+    float shootRange;
 } PlayerState;
 
 #endif
